@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
-	"os"
 	"sync"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -22,8 +20,8 @@ type CustomExporter struct {
 // NewCustomExporter creates a new instance of CustomExporter.
 func NewCustomExporter() *CustomExporter {
 	temperatureGauge := prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "custom_temperature",
-		Help: "Current temperature",
+		Name: "temperature_of_n5101",
+		Help: "Current temperature n5101",
 	})
 
 	prometheus.MustRegister(temperatureGauge)
@@ -43,11 +41,12 @@ func (e *CustomExporter) SetTemperature(temperature float64) {
 }
 
 func main() {
-	godotenv.Load()
-	port := os.Getenv("HTTP_PORT")
-	if port == "" {
-		port = "9897"
-	}
+	// godotenv.Load()
+	// port := os.Getenv("HTTP_PORT")
+	// if port == "" {
+	// 	port = "9897"
+	// }
+	port := "9897"
 	exporter := NewCustomExporter()
 
 	// Set temperature every 5 seconds for demonstration purposes.

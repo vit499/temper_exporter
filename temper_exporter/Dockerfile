@@ -1,8 +1,11 @@
-FROM quay.io/prometheus/busybox:latest
+FROM golang:1.19-alpine3.15 AS build-env
+WORKDIR /src
 
-COPY temper_exporter /bin/temper_exporter
+COPY . .
+RUN go mod download
 
-EXPOSE 9897
-USER nobody
+RUN go build -o /app ./main.go
 
-ENTRYPOINT [ "/bin/temper_exporter" ]
+FROM alpine:3.15
+COPY --from=build-env app /
+ENTRYPOINT ["/app"]

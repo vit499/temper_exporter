@@ -6,9 +6,7 @@ services:
     container_name: temper_exporter
     restart: unless-stopped
     ports:
-      - ${HTTP_PORT}:${HTTP_PORT}
-    environment:
-      - HTTP_HOST=${HTTP_HOST}
+      - "9897:9897"
     logging:
       options:
         max-size: 10m
