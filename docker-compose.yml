@@ -2,12 +2,11 @@ version: "3"
 
 services:
   temper_exporter:
-    build: .
+    build: ./temper_exporter
     container_name: temper_exporter
     restart: unless-stopped
     ports:
       - ${HTTP_PORT}:${HTTP_PORT}
-      # - 31021:31021
     environment:
       - HTTP_HOST=${HTTP_HOST}
     logging:

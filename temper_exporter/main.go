@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -37,9 +39,15 @@ func (e *CustomExporter) SetTemperature(temperature float64) {
 	defer e.mutex.Unlock()
 
 	e.temperatureGauge.Set(temperature)
+	fmt.Printf("Temperature set to %f\n", temperature)
 }
 
 func main() {
+	godotenv.Load()
+	port := os.Getenv("HTTP_PORT")
+	if port == "" {
+		port = "9897"
+	}
 	exporter := NewCustomExporter()
 
 	// Set temperature every 5 seconds for demonstration purposes.
@@ -53,7 +61,9 @@ func main() {
 	}()
 
 	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(":8080", nil)
+	strPort := fmt.Sprintf("0.0.0.0:%s", port)
+	fmt.Printf("Listening on %s\n", strPort)
+	err := http.ListenAndServe(strPort, nil)
 	if err != nil {
 		fmt.Println("Error starting HTTP server:", err)
 		return
